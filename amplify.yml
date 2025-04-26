@@ -7,6 +7,12 @@ backend:
         - npx ampx pipeline-deploy --branch $AWS_BRANCH --app-id $AWS_APP_ID
 frontend:
   phases:
+    preBuild:
+      commands:
+        - nvm install 20          # 安裝 Node 20
+        - nvm use 20              # 使用 Node 20
+        - corepack enable         # 啟用 corepack (支援 npm/yarn/pnpm)
+        - npm ci
     build:
       commands:
         - npm run build
