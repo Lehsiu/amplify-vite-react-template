@@ -143,7 +143,7 @@ const ChatApp: React.FC = () => {
   
   const fetchFileContent = async (fileName: string) => {
     try {
-      const response = await fetch('https://6ejnpn4i1j.execute-api.us-west-2.amazonaws.com/{$default}', {
+      const response = await fetch('https://6ejnpn4i1j.execute-api.us-west-2.amazonaws.com/{$default}/amplify-service', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
