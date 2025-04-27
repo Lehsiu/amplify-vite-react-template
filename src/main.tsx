@@ -4,9 +4,12 @@ import App from "./App.tsx";
 import "./index.css";
 import { Amplify } from "aws-amplify";
 import outputs from "./amplify_outputs.json";
-import './index.css';
 
-Amplify.configure(outputs);
+try {
+  Amplify.configure(outputs);
+} catch (e) {
+  console.warn("amplify_outputs.json not found, skipping Amplify config");
+}
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
