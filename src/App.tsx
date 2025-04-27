@@ -6,8 +6,10 @@ const ChatApp: React.FC = () => {
     { id: 1, name: 'Chat 1' },
   ]);
   const [activeChat, setActiveChat] = useState(1);
-  const [messages, setMessages] = useState<{ chatId: number; sender: 'user' | 'bot'; text: string }[]>([]);
+  const [messages, setMessages] = useState<{ chatId: number; sender: 'user' | 'bot'; text: string; file?: File }[]>([]);
   const [input, setInput] = useState('');
+  const [sidebarActive, setSidebarActive] = useState(true);
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
 
   const handleNewChat = () => {
     const newId = chats.length + 1;
@@ -20,6 +22,10 @@ const ChatApp: React.FC = () => {
     if (newName !== null) {
       setChats((prev) => prev.map((chat) => chat.id === chatId ? { ...chat, name: newName } : chat));
     }
+  };
+
+  const triggerFileInput = () => {
+    fileInputRef.current?.click();
   };
 
   const handleSend = () => {
@@ -44,12 +50,25 @@ const ChatApp: React.FC = () => {
     }
   };
 
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setMessages([...messages, { chatId: activeChat, sender: 'user', text: `已上傳檔案：${file.name}`, file }]);
+      setTimeout(() => {
+        setMessages((prev) => [...prev, { chatId: activeChat, sender: 'bot', text: '收到檔案！' }]);
+      }, 500);
+    }
+  };
+
+ 
+
   return (
     <div className="chat-app">
-      <div className="sidebar">
+      <div id="js-chatbar" className={`sidebar --is-active`}>
         <div className="sidebar-header">
           <h2>智慧製造Chatbot</h2>
           <button onClick={handleNewChat}>＋</button>
+
         </div>
         <div className="chat-list">
           {chats.map((chat) => (
@@ -87,6 +106,14 @@ const ChatApp: React.FC = () => {
             placeholder="輸入訊息..."
           />
           <button onClick={handleSend}>送出</button>
+          <button onClick={triggerFileInput}>+</button>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel"
+            onChange={handleFileUpload}
+            style={{ display: 'none' }}
+          />
         </div>
       </div>
     </div>
